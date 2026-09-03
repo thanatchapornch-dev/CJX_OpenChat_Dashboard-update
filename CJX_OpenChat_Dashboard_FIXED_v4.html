@@ -76,6 +76,42 @@ a.gmap{color:var(--accent); text-decoration:none; font-size:11px;}
 </style>
 </head>
 <body>
+<div id="pwGateOverlay" style="position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <div style="background:var(--panel-solid);border:1px solid var(--border);border-radius:var(--radius,16px);padding:32px 28px;width:min(340px,90vw);box-shadow:0 8px 30px rgba(0,0,0,0.15);text-align:center;">
+    <div style="font-size:32px;margin-bottom:8px;">🔒</div>
+    <div style="font-weight:600;font-size:16px;color:var(--text);margin-bottom:4px;">CJX Branch &amp; OpenChat Dashboard</div>
+    <div style="font-size:13px;color:var(--text-2);margin-bottom:18px;">กรอกรหัสผ่านเพื่อเข้าดูข้อมูล</div>
+    <input id="pwGateInput" type="password" placeholder="รหัสผ่าน" style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:14px;margin-bottom:10px;outline:none;" />
+    <div id="pwGateError" style="color:#e03131;font-size:12px;min-height:16px;margin-bottom:8px;"></div>
+    <button id="pwGateBtn" style="width:100%;padding:10px;border:none;border-radius:10px;background:var(--accent,#06C755);color:#fff;font-size:14px;font-weight:600;cursor:pointer;">เข้าสู่ระบบ</button>
+  </div>
+</div>
+<script>
+(function(){
+  var PW_KEY = 'cjx_pw_unlocked_v1';
+  var CORRECT = 'MKTdn';
+  var overlay = document.getElementById('pwGateOverlay');
+  if(localStorage.getItem(PW_KEY) === '1'){ overlay.remove(); return; }
+  document.documentElement.style.overflow = 'hidden';
+  function tryUnlock(){
+    var input = document.getElementById('pwGateInput');
+    var err = document.getElementById('pwGateError');
+    if(input.value === CORRECT){
+      localStorage.setItem(PW_KEY, '1');
+      document.documentElement.style.overflow = '';
+      overlay.remove();
+    } else {
+      err.textContent = 'รหัสผ่านไม่ถูกต้อง';
+      input.value = '';
+      input.focus();
+    }
+  }
+  document.getElementById('pwGateBtn').addEventListener('click', tryUnlock);
+  document.getElementById('pwGateInput').addEventListener('keydown', function(e){ if(e.key==='Enter') tryUnlock(); });
+  setTimeout(function(){ document.getElementById('pwGateInput').focus(); }, 50);
+})();
+</script>
+
 <div class="wrap">
   <header>
     <div>
@@ -91,7 +127,7 @@ a.gmap{color:var(--accent); text-decoration:none; font-size:11px;}
   </header>
 
   <div class="card">
-    <h3>📥 อัปเดตข้อมูล — โยนไฟล์ใหม่เข้ามาแทนที่ได้ทุกเมื่อ</h3>
+    <h3>📥 อัปเดตข้อมูล (ปิดใช้งานชั่วคราว) — ส่งไฟล์ให้ผู้ดูแลอัปเดตเข้าเว็บโดยตรงแทน</h3>
     <div class="import-box">
       <div>
         <div style="font-size:12px;font-weight:600;margin-bottom:4px;">1) ไฟล์ทะเบียนสาขา (CSV)</div>
@@ -205,11 +241,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 164,
       "2026-08-10": 166,
       "2026-08-13": 166,
-      "2026-08-26": 170
+      "2026-08-26": 170,
+      "2026-09-03": 175
     },
     "issues": null,
-    "latest_count": 170,
-    "latest_date": "2026-08-26"
+    "latest_count": 175,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T005",
@@ -242,11 +279,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 149,
       "2026-08-10": 169,
       "2026-08-13": 195,
-      "2026-08-26": 213
+      "2026-08-26": 213,
+      "2026-09-03": 221
     },
     "issues": null,
-    "latest_count": 213,
-    "latest_date": "2026-08-26"
+    "latest_count": 221,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T006",
@@ -279,11 +317,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 169,
       "2026-08-10": 189,
       "2026-08-13": 254,
-      "2026-08-26": 303
+      "2026-08-26": 303,
+      "2026-09-03": 313
     },
     "issues": null,
-    "latest_count": 303,
-    "latest_date": "2026-08-26"
+    "latest_count": 313,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T007",
@@ -316,11 +355,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 196,
       "2026-08-10": 211,
       "2026-08-13": 231,
-      "2026-08-26": 244
+      "2026-08-26": 244,
+      "2026-09-03": 248
     },
     "issues": null,
-    "latest_count": 244,
-    "latest_date": "2026-08-26"
+    "latest_count": 248,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T008",
@@ -353,11 +393,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 202,
       "2026-08-10": 203,
       "2026-08-13": 202,
-      "2026-08-26": 228
+      "2026-08-26": 228,
+      "2026-09-03": 267
     },
     "issues": null,
-    "latest_count": 228,
-    "latest_date": "2026-08-26"
+    "latest_count": 267,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T009",
@@ -390,11 +431,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 239,
       "2026-08-10": 260,
       "2026-08-13": 308,
-      "2026-08-26": 490
+      "2026-08-26": 490,
+      "2026-09-03": 496
     },
     "issues": null,
-    "latest_count": 490,
-    "latest_date": "2026-08-26"
+    "latest_count": 496,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T010",
@@ -454,11 +496,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 231,
       "2026-08-10": 230,
       "2026-08-13": 231,
-      "2026-08-26": 261
+      "2026-08-26": 261,
+      "2026-09-03": 275
     },
     "issues": null,
-    "latest_count": 261,
-    "latest_date": "2026-08-26"
+    "latest_count": 275,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T012",
@@ -491,11 +534,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 163,
       "2026-08-10": 164,
       "2026-08-13": 206,
-      "2026-08-26": 238
+      "2026-08-26": 238,
+      "2026-09-03": 238
     },
     "issues": null,
     "latest_count": 238,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T013",
@@ -528,11 +572,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 187,
       "2026-08-10": 184,
       "2026-08-13": 185,
-      "2026-08-26": 182
+      "2026-08-26": 182,
+      "2026-09-03": 183
     },
     "issues": null,
-    "latest_count": 182,
-    "latest_date": "2026-08-26"
+    "latest_count": 183,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T014",
@@ -565,11 +610,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 149,
       "2026-08-10": 155,
       "2026-08-13": 154,
-      "2026-08-26": 157
+      "2026-08-26": 157,
+      "2026-09-03": 156
     },
     "issues": null,
-    "latest_count": 157,
-    "latest_date": "2026-08-26"
+    "latest_count": 156,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T015",
@@ -602,11 +648,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 181,
       "2026-08-10": 180,
       "2026-08-13": 180,
-      "2026-08-26": 176
+      "2026-08-26": 176,
+      "2026-09-03": 176
     },
     "issues": null,
     "latest_count": 176,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T016",
@@ -639,11 +686,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 191,
       "2026-08-10": 195,
       "2026-08-13": 203,
-      "2026-08-26": 212
+      "2026-08-26": 212,
+      "2026-09-03": 212
     },
     "issues": null,
     "latest_count": 212,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T017",
@@ -676,11 +724,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 336,
       "2026-08-10": 336,
       "2026-08-13": 338,
-      "2026-08-26": 394
+      "2026-08-26": 394,
+      "2026-09-03": 419
     },
     "issues": null,
-    "latest_count": 394,
-    "latest_date": "2026-08-26"
+    "latest_count": 419,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T018",
@@ -713,11 +762,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 256,
       "2026-08-10": 256,
       "2026-08-13": 256,
-      "2026-08-26": 309
+      "2026-08-26": 309,
+      "2026-09-03": 340
     },
     "issues": null,
-    "latest_count": 309,
-    "latest_date": "2026-08-26"
+    "latest_count": 340,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T019",
@@ -750,11 +800,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 117,
       "2026-08-10": 116,
       "2026-08-13": 138,
-      "2026-08-26": 157
+      "2026-08-26": 157,
+      "2026-09-03": 158
     },
     "issues": null,
-    "latest_count": 157,
-    "latest_date": "2026-08-26"
+    "latest_count": 158,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T020",
@@ -787,11 +838,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 254,
       "2026-08-10": 256,
       "2026-08-13": 256,
-      "2026-08-26": 329
+      "2026-08-26": 329,
+      "2026-09-03": 354
     },
     "issues": null,
-    "latest_count": 329,
-    "latest_date": "2026-08-26"
+    "latest_count": 354,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T021",
@@ -824,11 +876,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 259,
       "2026-08-10": 257,
       "2026-08-13": 257,
-      "2026-08-26": 284
+      "2026-08-26": 284,
+      "2026-09-03": 288
     },
     "issues": null,
-    "latest_count": 284,
-    "latest_date": "2026-08-26"
+    "latest_count": 288,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T022",
@@ -861,11 +914,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 216,
       "2026-08-10": 217,
       "2026-08-13": 218,
-      "2026-08-26": 243
+      "2026-08-26": 243,
+      "2026-09-03": 243
     },
     "issues": null,
     "latest_count": 243,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T023",
@@ -898,11 +952,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 220,
       "2026-08-10": 219,
       "2026-08-13": 219,
-      "2026-08-26": 275
+      "2026-08-26": 275,
+      "2026-09-03": 278
     },
     "issues": null,
-    "latest_count": 275,
-    "latest_date": "2026-08-26"
+    "latest_count": 278,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T024",
@@ -935,11 +990,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 217,
       "2026-08-10": 218,
       "2026-08-13": 218,
-      "2026-08-26": 226
+      "2026-08-26": 226,
+      "2026-09-03": 238
     },
     "issues": null,
-    "latest_count": 226,
-    "latest_date": "2026-08-26"
+    "latest_count": 238,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T025",
@@ -972,11 +1028,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 229,
       "2026-08-10": 241,
       "2026-08-13": 242,
-      "2026-08-26": 339
+      "2026-08-26": 339,
+      "2026-09-03": 373
     },
     "issues": null,
-    "latest_count": 339,
-    "latest_date": "2026-08-26"
+    "latest_count": 373,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T026",
@@ -1009,11 +1066,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 200,
       "2026-08-10": 201,
       "2026-08-13": 202,
-      "2026-08-26": 225
+      "2026-08-26": 225,
+      "2026-09-03": 232
     },
     "issues": null,
-    "latest_count": 225,
-    "latest_date": "2026-08-26"
+    "latest_count": 232,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T027",
@@ -1046,11 +1104,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 256,
       "2026-08-10": 258,
       "2026-08-13": 258,
-      "2026-08-26": 313
+      "2026-08-26": 313,
+      "2026-09-03": 332
     },
     "issues": null,
-    "latest_count": 313,
-    "latest_date": "2026-08-26"
+    "latest_count": 332,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T028",
@@ -1083,11 +1142,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 265,
       "2026-08-10": 264,
       "2026-08-13": 266,
-      "2026-08-26": 310
+      "2026-08-26": 310,
+      "2026-09-03": 329
     },
     "issues": null,
-    "latest_count": 310,
-    "latest_date": "2026-08-26"
+    "latest_count": 329,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T029",
@@ -1120,11 +1180,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 184,
       "2026-08-10": 190,
       "2026-08-13": 191,
-      "2026-08-26": 194
+      "2026-08-26": 194,
+      "2026-09-03": 195
     },
     "issues": null,
-    "latest_count": 194,
-    "latest_date": "2026-08-26"
+    "latest_count": 195,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T030",
@@ -1157,11 +1218,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 268,
       "2026-08-10": 305,
       "2026-08-13": 363,
-      "2026-08-26": 392
+      "2026-08-26": 392,
+      "2026-09-03": 475
     },
     "issues": null,
-    "latest_count": 392,
-    "latest_date": "2026-08-26"
+    "latest_count": 475,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T031",
@@ -1194,11 +1256,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 243,
       "2026-08-10": 242,
       "2026-08-13": 264,
-      "2026-08-26": 270
+      "2026-08-26": 270,
+      "2026-09-03": 277
     },
     "issues": null,
-    "latest_count": 270,
-    "latest_date": "2026-08-26"
+    "latest_count": 277,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T032",
@@ -1231,11 +1294,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 208,
       "2026-08-10": 211,
       "2026-08-13": 227,
-      "2026-08-26": 242
+      "2026-08-26": 242,
+      "2026-09-03": 247
     },
     "issues": null,
-    "latest_count": 242,
-    "latest_date": "2026-08-26"
+    "latest_count": 247,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T033",
@@ -1268,11 +1332,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 268,
       "2026-08-10": 268,
       "2026-08-13": 268,
-      "2026-08-26": 269
+      "2026-08-26": 269,
+      "2026-09-03": 271
     },
     "issues": null,
-    "latest_count": 269,
-    "latest_date": "2026-08-26"
+    "latest_count": 271,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T034",
@@ -1305,11 +1370,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 149,
       "2026-08-10": 152,
       "2026-08-13": 194,
-      "2026-08-26": 235
+      "2026-08-26": 235,
+      "2026-09-03": 244
     },
     "issues": null,
-    "latest_count": 235,
-    "latest_date": "2026-08-26"
+    "latest_count": 244,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T035",
@@ -1342,11 +1408,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 226,
       "2026-08-10": 267,
       "2026-08-13": 267,
-      "2026-08-26": 263
+      "2026-08-26": 263,
+      "2026-09-03": 263
     },
     "issues": null,
     "latest_count": 263,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T036",
@@ -1379,11 +1446,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 66,
       "2026-08-10": 76,
       "2026-08-13": 81,
-      "2026-08-26": 209
+      "2026-08-26": 209,
+      "2026-09-03": 284
     },
     "issues": null,
-    "latest_count": 209,
-    "latest_date": "2026-08-26"
+    "latest_count": 284,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T037",
@@ -1416,11 +1484,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 204,
       "2026-08-10": 214,
       "2026-08-13": 215,
-      "2026-08-26": 306
+      "2026-08-26": 306,
+      "2026-09-03": 350
     },
     "issues": null,
-    "latest_count": 306,
-    "latest_date": "2026-08-26"
+    "latest_count": 350,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T038",
@@ -1453,11 +1522,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 175,
       "2026-08-10": 173,
       "2026-08-13": 174,
-      "2026-08-26": 173
+      "2026-08-26": 173,
+      "2026-09-03": 174
     },
     "issues": null,
-    "latest_count": 173,
-    "latest_date": "2026-08-26"
+    "latest_count": 174,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T039",
@@ -1490,11 +1560,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 217,
       "2026-08-10": 223,
       "2026-08-13": 252,
-      "2026-08-26": 360
+      "2026-08-26": 360,
+      "2026-09-03": 398
     },
     "issues": null,
-    "latest_count": 360,
-    "latest_date": "2026-08-26"
+    "latest_count": 398,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T040",
@@ -1527,11 +1598,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 246,
       "2026-08-10": 252,
       "2026-08-13": 254,
-      "2026-08-26": 360
+      "2026-08-26": 360,
+      "2026-09-03": 410
     },
     "issues": null,
-    "latest_count": 360,
-    "latest_date": "2026-08-26"
+    "latest_count": 410,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T041",
@@ -1564,11 +1636,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 172,
       "2026-08-10": 172,
       "2026-08-13": 172,
-      "2026-08-26": 195
+      "2026-08-26": 195,
+      "2026-09-03": 208
     },
     "issues": null,
-    "latest_count": 195,
-    "latest_date": "2026-08-26"
+    "latest_count": 208,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T042",
@@ -1601,11 +1674,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 174,
       "2026-08-10": 177,
       "2026-08-13": 177,
-      "2026-08-26": 186
+      "2026-08-26": 186,
+      "2026-09-03": 223
     },
     "issues": null,
-    "latest_count": 186,
-    "latest_date": "2026-08-26"
+    "latest_count": 223,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T043",
@@ -1638,11 +1712,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 164,
       "2026-08-10": 165,
       "2026-08-13": 165,
-      "2026-08-26": 243
+      "2026-08-26": 243,
+      "2026-09-03": 311
     },
     "issues": null,
-    "latest_count": 243,
-    "latest_date": "2026-08-26"
+    "latest_count": 311,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T044",
@@ -1675,11 +1750,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 190,
       "2026-08-10": 191,
       "2026-08-13": 191,
-      "2026-08-26": 205
+      "2026-08-26": 205,
+      "2026-09-03": 216
     },
     "issues": null,
-    "latest_count": 205,
-    "latest_date": "2026-08-26"
+    "latest_count": 216,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T045",
@@ -1712,11 +1788,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 201,
       "2026-08-10": 202,
       "2026-08-13": 201,
-      "2026-08-26": 201
+      "2026-08-26": 201,
+      "2026-09-03": 218
     },
     "issues": null,
-    "latest_count": 201,
-    "latest_date": "2026-08-26"
+    "latest_count": 218,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T046",
@@ -1749,11 +1826,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 40,
       "2026-08-10": 40,
       "2026-08-13": 40,
-      "2026-08-26": 82
+      "2026-08-26": 82,
+      "2026-09-03": 191
     },
     "issues": null,
-    "latest_count": 82,
-    "latest_date": "2026-08-26"
+    "latest_count": 191,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T047",
@@ -1786,11 +1864,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 134,
       "2026-08-10": 134,
       "2026-08-13": 133,
-      "2026-08-26": 137
+      "2026-08-26": 137,
+      "2026-09-03": 175
     },
     "issues": null,
-    "latest_count": 137,
-    "latest_date": "2026-08-26"
+    "latest_count": 175,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T048",
@@ -1823,11 +1902,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 113,
       "2026-08-10": 114,
       "2026-08-13": 114,
-      "2026-08-26": 114
+      "2026-08-26": 114,
+      "2026-09-03": 119
     },
     "issues": null,
-    "latest_count": 114,
-    "latest_date": "2026-08-26"
+    "latest_count": 119,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T049",
@@ -1860,11 +1940,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 284,
       "2026-08-10": 286,
       "2026-08-13": 286,
-      "2026-08-26": 284
+      "2026-08-26": 284,
+      "2026-09-03": 284
     },
     "issues": null,
     "latest_count": 284,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T050",
@@ -1897,11 +1978,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 65,
       "2026-08-10": 77,
       "2026-08-13": 84,
-      "2026-08-26": 84
+      "2026-08-26": 84,
+      "2026-09-03": 83
     },
     "issues": null,
-    "latest_count": 84,
-    "latest_date": "2026-08-26"
+    "latest_count": 83,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T051",
@@ -1934,11 +2016,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 121,
       "2026-08-10": 122,
       "2026-08-13": 122,
-      "2026-08-26": 127
+      "2026-08-26": 127,
+      "2026-09-03": 144
     },
     "issues": null,
-    "latest_count": 127,
-    "latest_date": "2026-08-26"
+    "latest_count": 144,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T052",
@@ -1998,11 +2081,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 149,
       "2026-08-10": 174,
       "2026-08-13": 197,
-      "2026-08-26": 218
+      "2026-08-26": 218,
+      "2026-09-03": 221
     },
     "issues": null,
-    "latest_count": 218,
-    "latest_date": "2026-08-26"
+    "latest_count": 221,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T054",
@@ -2035,11 +2119,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 104,
       "2026-08-10": 103,
       "2026-08-13": 106,
-      "2026-08-26": 194
+      "2026-08-26": 194,
+      "2026-09-03": 205
     },
     "issues": null,
-    "latest_count": 194,
-    "latest_date": "2026-08-26"
+    "latest_count": 205,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T055",
@@ -2072,11 +2157,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 135,
       "2026-08-10": 136,
       "2026-08-13": 135,
-      "2026-08-26": 134
+      "2026-08-26": 134,
+      "2026-09-03": 133
     },
     "issues": null,
-    "latest_count": 134,
-    "latest_date": "2026-08-26"
+    "latest_count": 133,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T056",
@@ -2109,11 +2195,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 424,
       "2026-08-10": 429,
       "2026-08-13": 429,
-      "2026-08-26": 431
+      "2026-08-26": 431,
+      "2026-09-03": 453
     },
     "issues": null,
-    "latest_count": 431,
-    "latest_date": "2026-08-26"
+    "latest_count": 453,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T057",
@@ -2146,11 +2233,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 94,
       "2026-08-10": 93,
       "2026-08-13": 93,
-      "2026-08-26": 92
+      "2026-08-26": 92,
+      "2026-09-03": 91
     },
     "issues": null,
-    "latest_count": 92,
-    "latest_date": "2026-08-26"
+    "latest_count": 91,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T058",
@@ -2183,11 +2271,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 60,
       "2026-08-10": 60,
       "2026-08-13": 60,
-      "2026-08-26": 59
+      "2026-08-26": 59,
+      "2026-09-03": 86
     },
     "issues": null,
-    "latest_count": 59,
-    "latest_date": "2026-08-26"
+    "latest_count": 86,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T059",
@@ -2220,11 +2309,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 97,
       "2026-08-10": 94,
       "2026-08-13": 94,
-      "2026-08-26": 96
+      "2026-08-26": 96,
+      "2026-09-03": 98
     },
     "issues": null,
-    "latest_count": 96,
-    "latest_date": "2026-08-26"
+    "latest_count": 98,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T060",
@@ -2257,11 +2347,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 98,
       "2026-08-10": 97,
       "2026-08-13": 97,
-      "2026-08-26": 97
+      "2026-08-26": 97,
+      "2026-09-03": 103
     },
     "issues": null,
-    "latest_count": 97,
-    "latest_date": "2026-08-26"
+    "latest_count": 103,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T061",
@@ -2294,11 +2385,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 148,
       "2026-08-10": 147,
       "2026-08-13": 147,
-      "2026-08-26": 148
+      "2026-08-26": 148,
+      "2026-09-03": 158
     },
     "issues": null,
-    "latest_count": 148,
-    "latest_date": "2026-08-26"
+    "latest_count": 158,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T062",
@@ -2331,11 +2423,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 61,
       "2026-08-10": 61,
       "2026-08-13": 161,
-      "2026-08-26": 82
+      "2026-08-26": 82,
+      "2026-09-03": 117
     },
     "issues": null,
-    "latest_count": 82,
-    "latest_date": "2026-08-26"
+    "latest_count": 117,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T063",
@@ -2368,11 +2461,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 231,
       "2026-08-10": 230,
       "2026-08-13": 230,
-      "2026-08-26": 244
+      "2026-08-26": 244,
+      "2026-09-03": 243
     },
     "issues": null,
-    "latest_count": 244,
-    "latest_date": "2026-08-26"
+    "latest_count": 243,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T064",
@@ -2405,11 +2499,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 111,
       "2026-08-10": 112,
       "2026-08-13": 113,
-      "2026-08-26": 129
+      "2026-08-26": 129,
+      "2026-09-03": 126
     },
     "issues": null,
-    "latest_count": 129,
-    "latest_date": "2026-08-26"
+    "latest_count": 126,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T065",
@@ -2442,11 +2537,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 135,
       "2026-08-10": 133,
       "2026-08-13": 147,
-      "2026-08-26": 266
+      "2026-08-26": 266,
+      "2026-09-03": 317
     },
     "issues": null,
-    "latest_count": 266,
-    "latest_date": "2026-08-26"
+    "latest_count": 317,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T066",
@@ -2479,11 +2575,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 159,
       "2026-08-10": 176,
       "2026-08-13": 204,
-      "2026-08-26": 231
+      "2026-08-26": 231,
+      "2026-09-03": 268
     },
     "issues": null,
-    "latest_count": 231,
-    "latest_date": "2026-08-26"
+    "latest_count": 268,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T067",
@@ -2543,13 +2640,14 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": "105+40",
       "2026-08-10": 143,
       "2026-08-13": 143,
-      "2026-08-26": 102
+      "2026-08-26": 102,
+      "2026-09-03": 40
     },
     "issues": {
       "2026-07-30": "105+40"
     },
-    "latest_count": 102,
-    "latest_date": "2026-08-26"
+    "latest_count": 40,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T069",
@@ -2582,11 +2680,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 185,
       "2026-08-10": 184,
       "2026-08-13": 184,
-      "2026-08-26": 184
+      "2026-08-26": 184,
+      "2026-09-03": 185
     },
     "issues": null,
-    "latest_count": 184,
-    "latest_date": "2026-08-26"
+    "latest_count": 185,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T070",
@@ -2619,11 +2718,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 232,
       "2026-08-10": 228,
       "2026-08-13": 226,
-      "2026-08-26": 234
+      "2026-08-26": 234,
+      "2026-09-03": 239
     },
     "issues": null,
-    "latest_count": 234,
-    "latest_date": "2026-08-26"
+    "latest_count": 239,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T071",
@@ -2656,11 +2756,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 127,
       "2026-08-10": 138,
       "2026-08-13": 139,
-      "2026-08-26": 140
+      "2026-08-26": 140,
+      "2026-09-03": 138
     },
     "issues": null,
-    "latest_count": 140,
-    "latest_date": "2026-08-26",
+    "latest_count": 138,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -2694,11 +2795,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 240,
       "2026-08-10": 241,
       "2026-08-13": 245,
-      "2026-08-26": 246
+      "2026-08-26": 246,
+      "2026-09-03": 245
     },
     "issues": null,
-    "latest_count": 246,
-    "latest_date": "2026-08-26",
+    "latest_count": 245,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -2732,11 +2834,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 18,
       "2026-08-10": 123,
       "2026-08-13": 148,
-      "2026-08-26": 178
+      "2026-08-26": 178,
+      "2026-09-03": 182
     },
     "issues": null,
-    "latest_count": 178,
-    "latest_date": "2026-08-26"
+    "latest_count": 182,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T074",
@@ -2769,11 +2872,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 180,
       "2026-08-10": 183,
       "2026-08-13": 196,
-      "2026-08-26": 264
+      "2026-08-26": 264,
+      "2026-09-03": 267
     },
     "issues": null,
-    "latest_count": 264,
-    "latest_date": "2026-08-26",
+    "latest_count": 267,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -2807,11 +2911,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 207,
       "2026-08-10": 211,
       "2026-08-13": 211,
-      "2026-08-26": 207
+      "2026-08-26": 207,
+      "2026-09-03": 206
     },
     "issues": null,
-    "latest_count": 207,
-    "latest_date": "2026-08-26"
+    "latest_count": 206,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T076",
@@ -2844,11 +2949,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 340,
       "2026-08-10": 333,
       "2026-08-13": 333,
-      "2026-08-26": 326
+      "2026-08-26": 326,
+      "2026-09-03": 325
     },
     "issues": null,
-    "latest_count": 326,
-    "latest_date": "2026-08-26"
+    "latest_count": 325,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T077",
@@ -2881,11 +2987,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 233,
       "2026-08-10": 236,
       "2026-08-13": 263,
-      "2026-08-26": 309
+      "2026-08-26": 309,
+      "2026-09-03": 309
     },
     "issues": null,
     "latest_count": 309,
-    "latest_date": "2026-08-26",
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -2919,11 +3026,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 162,
       "2026-08-10": 193,
       "2026-08-13": 240,
-      "2026-08-26": 300
+      "2026-08-26": 300,
+      "2026-09-03": 300
     },
     "issues": null,
     "latest_count": 300,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T079",
@@ -2956,11 +3064,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 192,
       "2026-08-10": 194,
       "2026-08-13": 195,
-      "2026-08-26": 239
+      "2026-08-26": 239,
+      "2026-09-03": 257
     },
     "issues": null,
-    "latest_count": 239,
-    "latest_date": "2026-08-26"
+    "latest_count": 257,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T080",
@@ -2993,11 +3102,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 149,
       "2026-08-10": 152,
       "2026-08-13": 155,
-      "2026-08-26": 159
+      "2026-08-26": 159,
+      "2026-09-03": 164
     },
     "issues": null,
-    "latest_count": 159,
-    "latest_date": "2026-08-26"
+    "latest_count": 164,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T081",
@@ -3030,11 +3140,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 167,
       "2026-08-10": 168,
       "2026-08-13": 199,
-      "2026-08-26": 247
+      "2026-08-26": 247,
+      "2026-09-03": 263
     },
     "issues": null,
-    "latest_count": 247,
-    "latest_date": "2026-08-26",
+    "latest_count": 263,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3068,11 +3179,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 163,
       "2026-08-10": 207,
       "2026-08-13": 204,
-      "2026-08-26": 201
+      "2026-08-26": 201,
+      "2026-09-03": 202
     },
     "issues": null,
-    "latest_count": 201,
-    "latest_date": "2026-08-26",
+    "latest_count": 202,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3106,11 +3218,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 272,
       "2026-08-10": 284,
       "2026-08-13": 286,
-      "2026-08-26": 340
+      "2026-08-26": 340,
+      "2026-09-03": 410
     },
     "issues": null,
-    "latest_count": 340,
-    "latest_date": "2026-08-26"
+    "latest_count": 410,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T084",
@@ -3143,13 +3256,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": "83+24",
       "2026-08-10": 106,
       "2026-08-13": 106,
-      "2026-08-26": 96
+      "2026-08-26": 96,
+      "2026-09-03": 121
     },
-    "issues": {
-      "2026-07-30": "83+24"
-    },
-    "latest_count": 96,
-    "latest_date": "2026-08-26"
+    "issues": "{\"2026-07-30\": \"83+24\"} | ค่าดิบเดิมในไฟล์: '98 23' (รวมเป็น 121 -- โปรดตรวจสอบว่าถูกต้องไหม)",
+    "latest_count": 121,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T085",
@@ -3182,11 +3294,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 391,
       "2026-08-10": 424,
       "2026-08-13": 424,
-      "2026-08-26": 424
+      "2026-08-26": 424,
+      "2026-09-03": 419
     },
     "issues": null,
-    "latest_count": 424,
-    "latest_date": "2026-08-26",
+    "latest_count": 419,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3220,11 +3333,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 301,
       "2026-08-10": 319,
       "2026-08-13": 334,
-      "2026-08-26": 351
+      "2026-08-26": 351,
+      "2026-09-03": 349
     },
     "issues": null,
-    "latest_count": 351,
-    "latest_date": "2026-08-26",
+    "latest_count": 349,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3258,11 +3372,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 193,
       "2026-08-10": 192,
       "2026-08-13": 200,
-      "2026-08-26": 198
+      "2026-08-26": 198,
+      "2026-09-03": 212
     },
     "issues": null,
-    "latest_count": 198,
-    "latest_date": "2026-08-26",
+    "latest_count": 212,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3296,11 +3411,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 147,
       "2026-08-10": 147,
       "2026-08-13": 167,
-      "2026-08-26": 164
+      "2026-08-26": 164,
+      "2026-09-03": 172
     },
     "issues": null,
-    "latest_count": 164,
-    "latest_date": "2026-08-26",
+    "latest_count": 172,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3334,11 +3450,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 189,
       "2026-08-10": 253,
       "2026-08-13": 282,
-      "2026-08-26": 321
+      "2026-08-26": 321,
+      "2026-09-03": 394
     },
     "issues": null,
-    "latest_count": 321,
-    "latest_date": "2026-08-26"
+    "latest_count": 394,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T090",
@@ -3371,11 +3488,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 125,
       "2026-08-10": 125,
       "2026-08-13": 126,
-      "2026-08-26": 121
+      "2026-08-26": 121,
+      "2026-09-03": 119
     },
     "issues": null,
-    "latest_count": 121,
-    "latest_date": "2026-08-26"
+    "latest_count": 119,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T091",
@@ -3408,11 +3526,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 162,
       "2026-08-10": 163,
       "2026-08-13": 162,
-      "2026-08-26": 164
+      "2026-08-26": 164,
+      "2026-09-03": 168
     },
     "issues": null,
-    "latest_count": 164,
-    "latest_date": "2026-08-26"
+    "latest_count": 168,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T092",
@@ -3445,11 +3564,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 95,
       "2026-08-10": 105,
       "2026-08-13": 113,
-      "2026-08-26": 138
+      "2026-08-26": 138,
+      "2026-09-03": 138
     },
     "issues": null,
     "latest_count": 138,
-    "latest_date": "2026-08-26",
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3483,11 +3603,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 215,
       "2026-08-10": 229,
       "2026-08-13": 225,
-      "2026-08-26": 227
+      "2026-08-26": 227,
+      "2026-09-03": 229
     },
     "issues": null,
-    "latest_count": 227,
-    "latest_date": "2026-08-26"
+    "latest_count": 229,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T094",
@@ -3520,11 +3641,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 174,
       "2026-08-10": 180,
       "2026-08-13": 181,
-      "2026-08-26": 179
+      "2026-08-26": 179,
+      "2026-09-03": 183
     },
     "issues": null,
-    "latest_count": 179,
-    "latest_date": "2026-08-26",
+    "latest_count": 183,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3558,11 +3680,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 137,
       "2026-08-10": 154,
       "2026-08-13": 166,
-      "2026-08-26": 178
+      "2026-08-26": 178,
+      "2026-09-03": 198
     },
     "issues": null,
-    "latest_count": 178,
-    "latest_date": "2026-08-26"
+    "latest_count": 198,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T096",
@@ -3620,11 +3743,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 83,
       "2026-08-10": 90,
       "2026-08-13": 102,
-      "2026-08-26": 107
+      "2026-08-26": 107,
+      "2026-09-03": 127
     },
     "issues": null,
-    "latest_count": 107,
-    "latest_date": "2026-08-26",
+    "latest_count": 127,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3658,11 +3782,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 70,
       "2026-08-10": 79,
       "2026-08-13": 79,
-      "2026-08-26": 124
+      "2026-08-26": 124,
+      "2026-09-03": 123
     },
     "issues": null,
-    "latest_count": 124,
-    "latest_date": "2026-08-26",
+    "latest_count": 123,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3696,11 +3821,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 113,
       "2026-08-10": 115,
       "2026-08-13": 118,
-      "2026-08-26": 122
+      "2026-08-26": 122,
+      "2026-09-03": 137
     },
     "issues": null,
-    "latest_count": 122,
-    "latest_date": "2026-08-26"
+    "latest_count": 137,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T100",
@@ -3733,11 +3859,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 133,
       "2026-08-10": 133,
       "2026-08-13": 133,
-      "2026-08-26": 168
+      "2026-08-26": 168,
+      "2026-09-03": 186
     },
     "issues": null,
-    "latest_count": 168,
-    "latest_date": "2026-08-26"
+    "latest_count": 186,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T101",
@@ -3768,11 +3895,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 73,
       "2026-08-10": 100,
       "2026-08-13": 114,
-      "2026-08-26": 155
+      "2026-08-26": 155,
+      "2026-09-03": 152
     },
     "issues": null,
-    "latest_count": 155,
-    "latest_date": "2026-08-26",
+    "latest_count": 152,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3806,11 +3934,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 120,
       "2026-08-10": 121,
       "2026-08-13": 123,
-      "2026-08-26": 131
+      "2026-08-26": 131,
+      "2026-09-03": 136
     },
     "issues": null,
-    "latest_count": 131,
-    "latest_date": "2026-08-26",
+    "latest_count": 136,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3844,11 +3973,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 119,
       "2026-08-10": 122,
       "2026-08-13": 121,
-      "2026-08-26": 122
+      "2026-08-26": 122,
+      "2026-09-03": 126
     },
     "issues": null,
-    "latest_count": 122,
-    "latest_date": "2026-08-26"
+    "latest_count": 126,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T104",
@@ -3881,11 +4011,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 214,
       "2026-08-10": 259,
       "2026-08-13": 269,
-      "2026-08-26": 281
+      "2026-08-26": 281,
+      "2026-09-03": 288
     },
     "issues": null,
-    "latest_count": 281,
-    "latest_date": "2026-08-26",
+    "latest_count": 288,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3919,11 +4050,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 51,
       "2026-08-10": 66,
       "2026-08-13": 73,
-      "2026-08-26": 102
+      "2026-08-26": 102,
+      "2026-09-03": 113
     },
     "issues": null,
-    "latest_count": 102,
-    "latest_date": "2026-08-26"
+    "latest_count": 113,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T106",
@@ -3956,11 +4088,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 108,
       "2026-08-10": 109,
       "2026-08-13": 108,
-      "2026-08-26": 142
+      "2026-08-26": 142,
+      "2026-09-03": 145
     },
     "issues": null,
-    "latest_count": 142,
-    "latest_date": "2026-08-26",
+    "latest_count": 145,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -3994,11 +4127,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 176,
       "2026-08-10": 183,
       "2026-08-13": 190,
-      "2026-08-26": 203
+      "2026-08-26": 203,
+      "2026-09-03": 205
     },
     "issues": null,
-    "latest_count": 203,
-    "latest_date": "2026-08-26"
+    "latest_count": 205,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T108",
@@ -4031,11 +4165,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 113,
       "2026-08-10": 111,
       "2026-08-13": 111,
-      "2026-08-26": 115
+      "2026-08-26": 115,
+      "2026-09-03": 131
     },
     "issues": null,
-    "latest_count": 115,
-    "latest_date": "2026-08-26"
+    "latest_count": 131,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T109",
@@ -4068,11 +4203,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 136,
       "2026-08-10": 135,
       "2026-08-13": 134,
-      "2026-08-26": 137
+      "2026-08-26": 137,
+      "2026-09-03": 139
     },
     "issues": null,
-    "latest_count": 137,
-    "latest_date": "2026-08-26"
+    "latest_count": 139,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T110",
@@ -4105,11 +4241,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 138,
       "2026-08-10": 142,
       "2026-08-13": 148,
-      "2026-08-26": 150
+      "2026-08-26": 150,
+      "2026-09-03": 150
     },
     "issues": null,
     "latest_count": 150,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T111",
@@ -4142,11 +4279,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 169,
       "2026-08-10": 166,
       "2026-08-13": 165,
-      "2026-08-26": 188
+      "2026-08-26": 188,
+      "2026-09-03": 191
     },
     "issues": null,
-    "latest_count": 188,
-    "latest_date": "2026-08-26"
+    "latest_count": 191,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T112",
@@ -4179,11 +4317,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 101,
       "2026-08-10": 105,
       "2026-08-13": 105,
-      "2026-08-26": 107
+      "2026-08-26": 107,
+      "2026-09-03": 112
     },
     "issues": null,
-    "latest_count": 107,
-    "latest_date": "2026-08-26"
+    "latest_count": 112,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T113",
@@ -4216,11 +4355,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 95,
       "2026-08-10": 107,
       "2026-08-13": 108,
-      "2026-08-26": 146
+      "2026-08-26": 146,
+      "2026-09-03": 194
     },
     "issues": null,
-    "latest_count": 146,
-    "latest_date": "2026-08-26",
+    "latest_count": 194,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -4254,11 +4394,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 117,
       "2026-08-10": 118,
       "2026-08-13": 119,
-      "2026-08-26": 131
+      "2026-08-26": 131,
+      "2026-09-03": 146
     },
     "issues": null,
-    "latest_count": 131,
-    "latest_date": "2026-08-26"
+    "latest_count": 146,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T115",
@@ -4291,11 +4432,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 20,
       "2026-08-10": 30,
       "2026-08-13": 30,
-      "2026-08-26": 48
+      "2026-08-26": 48,
+      "2026-09-03": 49
     },
     "issues": null,
-    "latest_count": 48,
-    "latest_date": "2026-08-26"
+    "latest_count": 49,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T116",
@@ -4328,11 +4470,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 37,
       "2026-08-10": 35,
       "2026-08-13": 42,
-      "2026-08-26": 50
+      "2026-08-26": 50,
+      "2026-09-03": 53
     },
     "issues": null,
-    "latest_count": 50,
-    "latest_date": "2026-08-26",
+    "latest_count": 53,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -4366,11 +4509,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 84,
       "2026-08-10": 92,
       "2026-08-13": 93,
-      "2026-08-26": 94
+      "2026-08-26": 94,
+      "2026-09-03": 95
     },
     "issues": null,
-    "latest_count": 94,
-    "latest_date": "2026-08-26"
+    "latest_count": 95,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T118",
@@ -4403,11 +4547,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 109,
       "2026-08-10": 113,
       "2026-08-13": 113,
-      "2026-08-26": 115
+      "2026-08-26": 115,
+      "2026-09-03": 126
     },
     "issues": null,
-    "latest_count": 115,
-    "latest_date": "2026-08-26"
+    "latest_count": 126,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T119",
@@ -4440,11 +4585,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 103,
       "2026-08-10": 105,
       "2026-08-13": 105,
-      "2026-08-26": 184
+      "2026-08-26": 184,
+      "2026-09-03": 184
     },
     "issues": null,
     "latest_count": 184,
-    "latest_date": "2026-08-26",
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -4478,11 +4624,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 47,
       "2026-08-10": 47,
       "2026-08-13": 47,
-      "2026-08-26": 92
+      "2026-08-26": 92,
+      "2026-09-03": 112
     },
     "issues": null,
-    "latest_count": 92,
-    "latest_date": "2026-08-26",
+    "latest_count": 112,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -4516,11 +4663,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 80,
       "2026-08-10": 84,
       "2026-08-13": 96,
-      "2026-08-26": 191
+      "2026-08-26": 191,
+      "2026-09-03": 190
     },
     "issues": null,
-    "latest_count": 191,
-    "latest_date": "2026-08-26",
+    "latest_count": 190,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -4554,11 +4702,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 213,
       "2026-08-10": 207,
       "2026-08-13": 208,
-      "2026-08-26": 215
+      "2026-08-26": 215,
+      "2026-09-03": 224
     },
     "issues": null,
-    "latest_count": 215,
-    "latest_date": "2026-08-26"
+    "latest_count": 224,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T123",
@@ -4588,11 +4737,12 @@ const EMBEDDED_BRANCHES = [
       "2026-03-31": null,
       "2026-06-23": null,
       "2026-07-09": null,
-      "2026-07-30": null
+      "2026-07-30": null,
+      "2026-09-03": 2
     },
     "issues": null,
-    "latest_count": null,
-    "latest_date": null
+    "latest_count": 2,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T124",
@@ -4625,11 +4775,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 43,
       "2026-08-10": 51,
       "2026-08-13": 51,
-      "2026-08-26": 55
+      "2026-08-26": 55,
+      "2026-09-03": 64
     },
     "issues": null,
-    "latest_count": 55,
-    "latest_date": "2026-08-26",
+    "latest_count": 64,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -4663,11 +4814,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 35,
       "2026-08-10": 38,
       "2026-08-13": 41,
-      "2026-08-26": 43
+      "2026-08-26": 43,
+      "2026-09-03": 44
     },
     "issues": null,
-    "latest_count": 43,
-    "latest_date": "2026-08-26"
+    "latest_count": 44,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T126",
@@ -4700,11 +4852,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 113,
       "2026-08-10": 126,
       "2026-08-13": 132,
-      "2026-08-26": 191
+      "2026-08-26": 191,
+      "2026-09-03": 201
     },
     "issues": null,
-    "latest_count": 191,
-    "latest_date": "2026-08-26",
+    "latest_count": 201,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -4738,11 +4891,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 11,
       "2026-08-13": 12,
-      "2026-08-26": 42
+      "2026-08-26": 42,
+      "2026-09-03": 83
     },
     "issues": null,
-    "latest_count": 42,
-    "latest_date": "2026-08-26"
+    "latest_count": 83,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T128",
@@ -4775,11 +4929,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 103,
       "2026-08-10": 114,
       "2026-08-13": 118,
-      "2026-08-26": 143
+      "2026-08-26": 143,
+      "2026-09-03": 146
     },
     "issues": null,
-    "latest_count": 143,
-    "latest_date": "2026-08-26",
+    "latest_count": 146,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -4813,11 +4968,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 2,
       "2026-08-13": 14,
-      "2026-08-26": 37
+      "2026-08-26": 37,
+      "2026-09-03": 46
     },
     "issues": null,
-    "latest_count": 37,
-    "latest_date": "2026-08-26"
+    "latest_count": 46,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T130",
@@ -4850,11 +5006,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 242,
       "2026-08-10": 250,
       "2026-08-13": 253,
-      "2026-08-26": 260
+      "2026-08-26": 260,
+      "2026-09-03": 280
     },
     "issues": null,
-    "latest_count": 260,
-    "latest_date": "2026-08-26"
+    "latest_count": 280,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T131",
@@ -4887,11 +5044,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 145,
       "2026-08-10": 149,
       "2026-08-13": 162,
-      "2026-08-26": 163
+      "2026-08-26": 163,
+      "2026-09-03": 175
     },
     "issues": null,
-    "latest_count": 163,
-    "latest_date": "2026-08-26"
+    "latest_count": 175,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T132",
@@ -4924,11 +5082,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 115,
       "2026-08-10": 116,
       "2026-08-13": 117,
-      "2026-08-26": 122
+      "2026-08-26": 122,
+      "2026-09-03": 155
     },
     "issues": null,
-    "latest_count": 122,
-    "latest_date": "2026-08-26"
+    "latest_count": 155,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T133",
@@ -4960,11 +5119,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-09": null,
       "2026-07-30": null,
       "2026-08-13": 2,
-      "2026-08-26": 4
+      "2026-08-26": 4,
+      "2026-09-03": 4
     },
     "issues": null,
     "latest_count": 4,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T134",
@@ -4996,11 +5156,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-09": null,
       "2026-07-30": null,
       "2026-08-13": 2,
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 3
     },
     "issues": null,
-    "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_count": 3,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T135",
@@ -5033,11 +5194,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 75,
       "2026-08-10": 76,
       "2026-08-13": 76,
-      "2026-08-26": 82
+      "2026-08-26": 82,
+      "2026-09-03": 83
     },
     "issues": null,
-    "latest_count": 82,
-    "latest_date": "2026-08-26"
+    "latest_count": 83,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T136",
@@ -5097,11 +5259,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 89,
       "2026-08-10": 91,
       "2026-08-13": 92,
-      "2026-08-26": 93
+      "2026-08-26": 93,
+      "2026-09-03": 110
     },
     "issues": null,
-    "latest_count": 93,
-    "latest_date": "2026-08-26"
+    "latest_count": 110,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T138",
@@ -5134,11 +5297,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 161,
       "2026-08-13": 161,
-      "2026-08-26": 148
+      "2026-08-26": 148,
+      "2026-09-03": 157
     },
     "issues": null,
-    "latest_count": 148,
-    "latest_date": "2026-08-26"
+    "latest_count": 157,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T139",
@@ -5171,11 +5335,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 123,
       "2026-08-10": 162,
       "2026-08-13": 168,
-      "2026-08-26": 206
+      "2026-08-26": 206,
+      "2026-09-03": 222
     },
     "issues": null,
-    "latest_count": 206,
-    "latest_date": "2026-08-26",
+    "latest_count": 222,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -5209,11 +5374,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 8,
       "2026-08-13": 8,
-      "2026-08-26": 117
+      "2026-08-26": 117,
+      "2026-09-03": 180
     },
     "issues": null,
-    "latest_count": 117,
-    "latest_date": "2026-08-26"
+    "latest_count": 180,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T141",
@@ -5246,11 +5412,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 55,
       "2026-08-10": 61,
       "2026-08-13": 61,
-      "2026-08-26": 166
+      "2026-08-26": 166,
+      "2026-09-03": 227
     },
     "issues": null,
-    "latest_count": 166,
-    "latest_date": "2026-08-26"
+    "latest_count": 227,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T142",
@@ -5283,11 +5450,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 197,
       "2026-08-10": 186,
       "2026-08-13": 180,
-      "2026-08-26": 234
+      "2026-08-26": 234,
+      "2026-09-03": 242
     },
     "issues": null,
-    "latest_count": 234,
-    "latest_date": "2026-08-26"
+    "latest_count": 242,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T143",
@@ -5320,11 +5488,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 174,
       "2026-08-10": 174,
       "2026-08-13": 175,
-      "2026-08-26": 172
+      "2026-08-26": 172,
+      "2026-09-03": 173
     },
     "issues": null,
-    "latest_count": 172,
-    "latest_date": "2026-08-26"
+    "latest_count": 173,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T144",
@@ -5357,11 +5526,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 93,
       "2026-08-10": 133,
       "2026-08-13": 142,
-      "2026-08-26": 158
+      "2026-08-26": 158,
+      "2026-09-03": 173
     },
     "issues": null,
-    "latest_count": 158,
-    "latest_date": "2026-08-26"
+    "latest_count": 173,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T145",
@@ -5394,11 +5564,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 74,
       "2026-08-10": 82,
       "2026-08-13": 82,
-      "2026-08-26": 109
+      "2026-08-26": 109,
+      "2026-09-03": 154
     },
     "issues": null,
-    "latest_count": 109,
-    "latest_date": "2026-08-26"
+    "latest_count": 154,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T146",
@@ -5431,11 +5602,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 180,
       "2026-08-10": 197,
       "2026-08-13": 198,
-      "2026-08-26": 360
+      "2026-08-26": 360,
+      "2026-09-03": 399
     },
     "issues": null,
-    "latest_count": 360,
-    "latest_date": "2026-08-26"
+    "latest_count": 399,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T147",
@@ -5468,11 +5640,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 102,
       "2026-08-10": 123,
       "2026-08-13": 154,
-      "2026-08-26": 298
+      "2026-08-26": 298,
+      "2026-09-03": 346
     },
     "issues": null,
-    "latest_count": 298,
-    "latest_date": "2026-08-26"
+    "latest_count": 346,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T148",
@@ -5500,11 +5673,12 @@ const EMBEDDED_BRANCHES = [
       "baseline": 0,
       "2026-08-10": 6,
       "2026-08-13": 6,
-      "2026-08-26": 26
+      "2026-08-26": 26,
+      "2026-09-03": 218
     },
     "issues": "อัปเดตสถานะเป็นเปิดแล้วเมื่อ 2026-08-10 (เดิม: ก่อสร้างแล้ว รอเปิดร้าน, grand_opening 2026-08-08 ผ่านมาแล้ว) — ยังไม่มีข้อมูลสมาชิก OpenChat จริง รอกรอกยอดจริง | ย้อนสถานะกลับเป็น 'ยังไม่เปิด' เนื่องจากประกาศเปิดร้าน 13 Aug 2026 ระบุวันเปิดจริงเป็น 2026-08-29 (เดิมระบบมีข้อมูลสมาชิก OpenChat ล่วงหน้าก่อนเปิดสาขาจริง)",
-    "latest_count": 26,
-    "latest_date": "2026-08-26"
+    "latest_count": 218,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T149",
@@ -5564,11 +5738,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 75,
       "2026-08-10": 86,
       "2026-08-13": 87,
-      "2026-08-26": 88
+      "2026-08-26": 88,
+      "2026-09-03": 97
     },
     "issues": null,
-    "latest_count": 88,
-    "latest_date": "2026-08-26"
+    "latest_count": 97,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T151",
@@ -5601,11 +5776,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 98,
       "2026-08-10": 123,
       "2026-08-13": 147,
-      "2026-08-26": 207
+      "2026-08-26": 207,
+      "2026-09-03": 214
     },
     "issues": null,
-    "latest_count": 207,
-    "latest_date": "2026-08-26",
+    "latest_count": 214,
+    "latest_date": "2026-09-03",
     "focus_round": "รอบ 1 - ส.ค. 69"
   },
   {
@@ -5634,11 +5810,12 @@ const EMBEDDED_BRANCHES = [
       "baseline": 0,
       "2026-08-10": 186,
       "2026-08-13": 198,
-      "2026-08-26": 199
+      "2026-08-26": 199,
+      "2026-09-03": 211
     },
     "issues": "อัปเดตสถานะเป็นเปิดแล้วเมื่อ 2026-08-10 (เดิม: Set up ร้าน, grand_opening 2026-08-05 ผ่านมาแล้ว) — ยังไม่มีข้อมูลสมาชิก OpenChat จริง รอกรอกยอดจริง",
-    "latest_count": 199,
-    "latest_date": "2026-08-26"
+    "latest_count": 211,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T153",
@@ -5671,11 +5848,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 2,
       "2026-08-13": 2,
-      "2026-08-26": 10
+      "2026-08-26": 10,
+      "2026-09-03": 19
     },
     "issues": null,
-    "latest_count": 10,
-    "latest_date": "2026-08-26"
+    "latest_count": 19,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T154",
@@ -5708,11 +5886,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 74,
       "2026-08-10": 96,
       "2026-08-13": 122,
-      "2026-08-26": 169
+      "2026-08-26": 169,
+      "2026-09-03": 173
     },
     "issues": null,
-    "latest_count": 169,
-    "latest_date": "2026-08-26"
+    "latest_count": 173,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T155",
@@ -5772,11 +5951,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 4,
       "2026-08-13": 4,
-      "2026-08-26": 33
+      "2026-08-26": 33,
+      "2026-09-03": 55
     },
     "issues": null,
-    "latest_count": 33,
-    "latest_date": "2026-08-26"
+    "latest_count": 55,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T157",
@@ -5809,11 +5989,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 77,
       "2026-08-13": 81,
-      "2026-08-26": 95
+      "2026-08-26": 95,
+      "2026-09-03": 114
     },
     "issues": null,
-    "latest_count": 95,
-    "latest_date": "2026-08-26"
+    "latest_count": 114,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T158",
@@ -5846,11 +6027,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 3,
       "2026-08-13": 16,
-      "2026-08-26": 62
+      "2026-08-26": 62,
+      "2026-09-03": 75
     },
     "issues": null,
-    "latest_count": 62,
-    "latest_date": "2026-08-26"
+    "latest_count": 75,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T159",
@@ -5883,11 +6065,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 2,
       "2026-08-13": 2,
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 2
     },
     "issues": null,
     "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T160",
@@ -5920,11 +6103,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 18,
       "2026-08-10": 25,
       "2026-08-13": 26,
-      "2026-08-26": 28
+      "2026-08-26": 28,
+      "2026-09-03": 40
     },
     "issues": null,
-    "latest_count": 28,
-    "latest_date": "2026-08-26"
+    "latest_count": 40,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T161",
@@ -5957,11 +6141,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 2,
       "2026-08-13": 2,
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 3
     },
     "issues": null,
-    "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_count": 3,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T162",
@@ -5989,11 +6174,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": 2,
       "2026-08-10": 2,
       "2026-08-13": 2,
-      "2026-08-26": 36
+      "2026-08-26": 36,
+      "2026-09-03": 752
     },
     "issues": "มีข้อมูลสมาชิก OpenChat ล่วงหน้าก่อนเปิดสาขาจริง (ตามรายงาน report_open_chat_update_50869.xlsx: 2 คน ณ 2026-07-30) แต่ grand_opening คือ 2026-08-15 (ยังไม่ถึง) จึงยังไม่นับเป็นสาขาเปิดแล้ว",
-    "latest_count": 36,
-    "latest_date": "2026-08-26"
+    "latest_count": 752,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T163",
@@ -6021,11 +6207,12 @@ const EMBEDDED_BRANCHES = [
       "baseline": 0,
       "2026-08-10": 40,
       "2026-08-13": 45,
-      "2026-08-26": 52
+      "2026-08-26": 52,
+      "2026-09-03": 78
     },
     "issues": "อัปเดตสถานะเป็นเปิดแล้วเมื่อ 2026-08-10 (เดิม: ก่อสร้างแล้ว รอเปิดร้าน, grand_opening 2026-08-08 ผ่านมาแล้ว) — ยังไม่มีข้อมูลสมาชิก OpenChat จริง รอกรอกยอดจริง",
-    "latest_count": 52,
-    "latest_date": "2026-08-26"
+    "latest_count": 78,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T164",
@@ -6085,11 +6272,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 2,
       "2026-08-13": 2,
-      "2026-08-26": 5
+      "2026-08-26": 5,
+      "2026-09-03": 88
     },
     "issues": null,
-    "latest_count": 5,
-    "latest_date": "2026-08-26"
+    "latest_count": 88,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T166",
@@ -6121,11 +6309,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-09": null,
       "2026-07-30": null,
       "2026-08-13": 2,
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 3
     },
     "issues": null,
-    "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_count": 3,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T167",
@@ -6158,11 +6347,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 2,
       "2026-08-13": 2,
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 2
     },
     "issues": null,
     "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T168",
@@ -6194,11 +6384,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-09": null,
       "2026-07-30": null,
       "2026-08-13": 2,
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 3
     },
     "issues": null,
-    "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_count": 3,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T169",
@@ -6258,11 +6449,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 19,
       "2026-08-13": 31,
-      "2026-08-26": 41
+      "2026-08-26": 41,
+      "2026-09-03": 54
     },
     "issues": null,
-    "latest_count": 41,
-    "latest_date": "2026-08-26"
+    "latest_count": 54,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T171",
@@ -6295,11 +6487,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 96,
       "2026-08-13": 97,
-      "2026-08-26": 148
+      "2026-08-26": 148,
+      "2026-09-03": 167
     },
     "issues": null,
-    "latest_count": 148,
-    "latest_date": "2026-08-26"
+    "latest_count": 167,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T172",
@@ -6332,11 +6525,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 44,
       "2026-08-13": 48,
-      "2026-08-26": 94
+      "2026-08-26": 94,
+      "2026-09-03": 188
     },
     "issues": null,
-    "latest_count": 94,
-    "latest_date": "2026-08-26"
+    "latest_count": 188,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T173",
@@ -6366,11 +6560,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-09": 50,
       "2026-07-30": 76,
       "2026-08-13": 224,
-      "2026-08-26": 285
+      "2026-08-26": 285,
+      "2026-09-03": 303
     },
     "issues": null,
-    "latest_count": 285,
-    "latest_date": "2026-08-26"
+    "latest_count": 303,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T174",
@@ -6398,11 +6593,12 @@ const EMBEDDED_BRANCHES = [
       "baseline": 0,
       "2026-08-10": 100,
       "2026-08-13": 89,
-      "2026-08-26": 78
+      "2026-08-26": 78,
+      "2026-09-03": 81
     },
     "issues": "อัปเดตสถานะเป็นเปิดแล้วเมื่อ 2026-08-10 (เดิม: ก่อสร้างแล้ว รอเปิดร้าน, grand_opening 2026-08-08 ผ่านมาแล้ว) — ยังไม่มีข้อมูลสมาชิก OpenChat จริง รอกรอกยอดจริง",
-    "latest_count": 78,
-    "latest_date": "2026-08-26"
+    "latest_count": 81,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T175",
@@ -6435,11 +6631,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 67,
       "2026-08-13": 67,
-      "2026-08-26": 70
+      "2026-08-26": 70,
+      "2026-09-03": 77
     },
     "issues": null,
-    "latest_count": 70,
-    "latest_date": "2026-08-26"
+    "latest_count": 77,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T176",
@@ -6471,11 +6668,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-09": null,
       "2026-07-30": null,
       "2026-08-13": 2,
-      "2026-08-26": 161
+      "2026-08-26": 161,
+      "2026-09-03": 177
     },
     "issues": null,
-    "latest_count": 161,
-    "latest_date": "2026-08-26"
+    "latest_count": 177,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T177",
@@ -6508,11 +6706,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 2,
       "2026-08-13": 2,
-      "2026-08-26": 4
+      "2026-08-26": 4,
+      "2026-09-03": 58
     },
     "issues": null,
-    "latest_count": 4,
-    "latest_date": "2026-08-26"
+    "latest_count": 58,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T178",
@@ -6545,11 +6744,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 2,
       "2026-08-13": 2,
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 3
     },
     "issues": null,
-    "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_count": 3,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T179",
@@ -6631,11 +6831,12 @@ const EMBEDDED_BRANCHES = [
       "baseline": 0,
       "2026-08-10": 80,
       "2026-08-13": 81,
-      "2026-08-26": 79
+      "2026-08-26": 79,
+      "2026-09-03": 103
     },
     "issues": "อัปเดตสถานะเป็นเปิดแล้วเมื่อ 2026-08-10 (เดิม: ก่อสร้างแล้ว รอเปิดร้าน, grand_opening 2026-08-08 ผ่านมาแล้ว) — ยังไม่มีข้อมูลสมาชิก OpenChat จริง รอกรอกยอดจริง",
-    "latest_count": 79,
-    "latest_date": "2026-08-26"
+    "latest_count": 103,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T182",
@@ -6667,11 +6868,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-09": null,
       "2026-07-30": null,
       "2026-08-13": 42,
-      "2026-08-26": 102
+      "2026-08-26": 102,
+      "2026-09-03": 262
     },
     "issues": null,
-    "latest_count": 102,
-    "latest_date": "2026-08-26"
+    "latest_count": 262,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T183",
@@ -6812,11 +7014,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 2,
       "2026-08-13": 2,
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 3
     },
     "issues": null,
-    "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_count": 3,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T188",
@@ -6847,11 +7050,12 @@ const EMBEDDED_BRANCHES = [
       "2026-06-23": null,
       "2026-07-09": null,
       "2026-07-30": null,
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 2
     },
     "issues": null,
     "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T189",
@@ -6884,11 +7088,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-30": null,
       "2026-08-10": 2,
       "2026-08-13": 2,
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 3
     },
     "issues": null,
-    "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_count": 3,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T190",
@@ -6919,11 +7124,12 @@ const EMBEDDED_BRANCHES = [
       "2026-06-23": null,
       "2026-07-09": null,
       "2026-07-30": null,
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 2
     },
     "issues": null,
     "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T191",
@@ -6948,11 +7154,12 @@ const EMBEDDED_BRANCHES = [
     "status_group": "upcoming",
     "is_new": false,
     "history": {
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 183
     },
     "issues": null,
-    "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_count": 183,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T192",
@@ -7003,10 +7210,12 @@ const EMBEDDED_BRANCHES = [
     "status": "ก่อสร้างแล้ว รอเปิดร้าน",
     "status_group": "upcoming",
     "is_new": false,
-    "history": null,
+    "history": {
+      "2026-09-03": 2
+    },
     "issues": null,
-    "latest_count": null,
-    "latest_date": null
+    "latest_count": 2,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T194",
@@ -7254,11 +7463,12 @@ const EMBEDDED_BRANCHES = [
       "2026-07-09": null,
       "2026-07-30": null,
       "2026-08-13": 2,
-      "2026-08-26": 81
+      "2026-08-26": 81,
+      "2026-09-03": 142
     },
     "issues": null,
-    "latest_count": 81,
-    "latest_date": "2026-08-26"
+    "latest_count": 142,
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T203",
@@ -13682,11 +13892,12 @@ const EMBEDDED_BRANCHES = [
     "status_group": "upcoming",
     "is_new": false,
     "history": {
-      "2026-08-26": 2
+      "2026-08-26": 2,
+      "2026-09-03": 2
     },
     "issues": "สาขาใหม่จากไฟล์ประกาศเปิดร้าน 13 Aug 2026 — ยังไม่มีข้อมูลที่อยู่/แผนที่/สมาชิก OpenChat กรุณาเพิ่มเติม",
     "latest_count": 2,
-    "latest_date": "2026-08-26"
+    "latest_date": "2026-09-03"
   },
   {
     "t_code": "T238",
@@ -15156,7 +15367,7 @@ const STATUS_GROUP_MAP = {
 };
 const STATUS_LABEL = { opened:'เปิดแล้ว', upcoming:'กำลังจะเปิด', planned:'วางแผน', cancelled:'ยกเลิก', unknown:'ไม่ทราบสถานะ' };
 const STATUS_COLOR = { opened:['var(--green-bg)','var(--green-fg)'], upcoming:['var(--amber-bg)','var(--amber-fg)'], planned:['var(--blue-bg)','var(--blue-fg)'], cancelled:['var(--red-bg)','var(--red-fg)'], unknown:['var(--panel-solid)','var(--text)'] };
-const TODAY = new Date('2026-08-26T00:00:00');
+const TODAY = new Date('2026-09-03T00:00:00');
 
 function parseThaiDate(s){
   if(!s) return null;
@@ -15209,10 +15420,13 @@ function stripBOM(s){ return s.charCodeAt(0) === 0xFEFF ? s.slice(1) : s; }
 
 // ---------- persistence ----------
 function loadBranchData(){
-  try {
-    const raw = localStorage.getItem(DATA_KEY);
-    if(raw) return JSON.parse(raw);
-  } catch(e){}
+  // Branch/member data always comes straight from EMBEDDED_BRANCHES (baked into
+  // this file) so every viewer sees the same numbers. A per-browser localStorage
+  // override used to take priority here, which meant one person's device could
+  // silently keep showing stale data forever after using the file-upload buttons
+  // below, while everyone else saw the real numbers -- confusing and hard to
+  // detect. Manager/target/notes overrides (OVR_KEY) are unaffected and still
+  // save locally as before.
   return JSON.parse(JSON.stringify(EMBEDDED_BRANCHES));
 }
 function saveBranchData(data){ localStorage.setItem(DATA_KEY, JSON.stringify(data)); }
@@ -15325,40 +15539,17 @@ function importMemberRows(aoaRows){
 }
 
 document.getElementById('importBranchFile').addEventListener('change', (e) => {
-  const file = e.target.files[0]; if(!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const { updated, added } = importBranchCSV(reader.result);
-      document.getElementById('importStatus').textContent = `อัปเดตสำเร็จ: แก้ไข ${updated} สาขา, เพิ่มใหม่ ${added} สาขา`;
-      location.reload();
-    } catch(err){ document.getElementById('importStatus').textContent = 'เกิดข้อผิดพลาด: ' + err.message; }
-  };
-  reader.readAsText(file, 'utf-8');
+  e.target.value = '';
+  document.getElementById('importStatus').textContent =
+    'ปิดการใช้งานปุ่มนี้ไว้แล้ว เพราะทำให้แต่ละคนเห็นข้อมูลไม่ตรงกัน -- ส่งไฟล์ให้ผู้ดูแลอัปเดตเข้าเว็บโดยตรงแทน';
 });
 document.getElementById('importMemberFile').addEventListener('change', (e) => {
-  const file = e.target.files[0]; if(!file) return;
-  const isCSV = /\.csv$/i.test(file.name);
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      let aoa;
-      if(isCSV){
-        aoa = parseCSV(stripBOM(reader.result));
-      } else {
-        const wb = XLSX.read(reader.result, { type:'array', cellDates:true });
-        const sheet = wb.Sheets[wb.SheetNames[0]];
-        aoa = XLSX.utils.sheet_to_json(sheet, { header:1, raw:true });
-      }
-      const { updated } = importMemberRows(aoa);
-      document.getElementById('importStatus').textContent = `อัปเดตข้อมูลสมาชิกสำเร็จ: ${updated} สาขา`;
-      location.reload();
-    } catch(err){ document.getElementById('importStatus').textContent = 'เกิดข้อผิดพลาด: ' + err.message; }
-  };
-  if(isCSV) reader.readAsText(file, 'utf-8'); else reader.readAsArrayBuffer(file);
+  e.target.value = '';
+  document.getElementById('importStatus').textContent =
+    'ปิดการใช้งานปุ่มนี้ไว้แล้ว เพราะทำให้แต่ละคนเห็นข้อมูลไม่ตรงกัน -- ส่งไฟล์ให้ผู้ดูแลอัปเดตเข้าเว็บโดยตรงแทน';
 });
 document.getElementById('resetDataBtn').addEventListener('click', () => {
-  if(confirm('รีเซ็ตข้อมูลทั้งหมด (รวมข้อมูลที่นำเข้าเองและที่กรอกเอง) กลับเป็นค่าตั้งต้น?')){
+  if(confirm('ล้างข้อมูลผู้ดูแล/เป้าหมาย/หมายเหตุ ที่กรอกเองไว้ในเครื่องนี้?')){
     localStorage.removeItem(DATA_KEY); localStorage.removeItem(OVR_KEY);
     location.reload();
   }
@@ -15366,7 +15557,7 @@ document.getElementById('resetDataBtn').addEventListener('click', () => {
 
 // ---------- header subtitle ----------
 document.getElementById('headerSub').textContent =
-  `ข้อมูลสาขาทั้งหมด ${branches.length} แห่งในไปป์ไลน์ (รวม Prospect/อยู่ระหว่างก่อสร้าง) · อัปเดตข้อมูลสมาชิก OpenChat ล่าสุด 26 ส.ค. 2569 · ใช้ปุ่ม "อัปเดตข้อมูล" ด้านล่างเมื่อมีไฟล์ใหม่`;
+  `ข้อมูลสาขาทั้งหมด ${branches.length} แห่งในไปป์ไลน์ (รวม Prospect/อยู่ระหว่างก่อสร้าง) · อัปเดตข้อมูลสมาชิก OpenChat ล่าสุด 3 ก.ย. 2569 · ใช้ปุ่ม "อัปเดตข้อมูล" ด้านล่างเมื่อมีไฟล์ใหม่`;
 
 // ---------- review panel ----------
 function buildReviewItems(){
