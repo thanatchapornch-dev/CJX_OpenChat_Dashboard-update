@@ -517,7 +517,7 @@ function renderPipelineCharts(){
 }
 
 
-const commhubFilters = { q:'', province:'all', health:'all', focus:'all' };
+const commhubFilters = { q:'', province:'all', health:'all', focus:'all', sortKey:'grandOpening', sortDir:'desc' };
 
 function renderCommHub(){
   const root = document.getElementById('view-commhub');
@@ -624,6 +624,11 @@ function ocChangeCell(b){
   const tip = `${ocFormatDate(c.prevDate)||c.prevDate} (${c.prevVal}) → ${ocFormatDate(c.lastDate)||c.lastDate} (${c.lastVal})`;
   return `<span title="${escHtml(tip)}" style="color:${color};font-weight:600;">${arrow} ${sign}${c.delta}</span>`;
 }
+function ocSortTh(label, key){
+  const active = commhubFilters.sortKey === key;
+  const arrow = active ? (commhubFilters.sortDir==='asc' ? ' ▲' : ' ▼') : '';
+  return `<th class="oc-sort-th" data-sort-key="${key}" style="cursor:pointer;user-select:none;${active?'color:var(--info);':''}" title="เรียงตาม${escHtml(label)}">${escHtml(label)}${arrow}</th>`;
+}
 function renderOpenChatManagement(body){
   // สาขายังไม่เปิดร้านแต่มีข้อมูลสมาชิกโอเพนแชทจริง (กลุ่มตั้งก่อนเปิดร้าน) ให้แสดงด้วย ไม่ใช่แค่สาขาที่เปิดแล้ว
   const branches = STORE.BRANCHES.filter(b=>!b.notYetOpenedStore || (b.history && Object.values(b.history).some(v=>v!==null)));
@@ -646,7 +651,14 @@ function renderOpenChatManagement(body){
     </div>
     <div class="table-scroll" id="ocTableScroll" style="max-height:560px;overflow:auto;">
       <table id="ocBranchTable">
-        <thead><tr><th>สาขา</th><th>จังหวัด</th><th>คลัง/โซน</th><th>วันเปิด</th><th>สมาชิกปัจจุบัน</th><th>วันที่นับล่าสุด</th><th>เปลี่ยนแปลงล่าสุด</th><th>Baseline</th><th>โต%</th><th>สุขภาพ</th><th>สาขาโฟกัส</th><th>ผู้ดูแลชุมชน</th><th>ลิงก์แชท</th><th>แผนที่</th></tr></thead>
+        <thead><tr>
+          ${ocSortTh('สาขา','name')}<th>จังหวัด</th><th>คลัง/โซน</th>
+          ${ocSortTh('วันเปิด','grandOpening')}
+          ${ocSortTh('สมาชิกปัจจุบัน','members')}
+          <th>วันที่นับล่าสุด</th><th>เปลี่ยนแปลงล่าสุด</th><th>Baseline</th>
+          ${ocSortTh('โต%','growth')}
+          <th>สุขภาพ</th><th>สาขาโฟกัส</th><th>ผู้ดูแลชุมชน</th><th>ลิงก์แชท</th><th>แผนที่</th>
+        </tr></thead>
         <tbody id="ocTbody"></tbody>
       </table>
     </div>
@@ -660,7 +672,16 @@ function renderOpenChatManagement(body){
     if(commhubFilters.focus==='__any__') list = list.filter(b=>b.focusRound);
     else if(commhubFilters.focus==='__none__') list = list.filter(b=>!b.focusRound);
     else if(commhubFilters.focus!=='all') list = list.filter(b=>b.focusRound===commhubFilters.focus);
-    list.sort((a,b)=> (b.growth===null?-999:b.growth) - (a.growth===null?-999:a.growth));
+    const sk = commhubFilters.sortKey, dir = commhubFilters.sortDir==='asc' ? 1 : -1;
+    list.sort((a,b) => {
+      let av = a[sk], bv = b[sk];
+      if(sk==='name'){ av = av||''; bv = bv||''; return av.localeCompare(bv) * dir; }
+      // nulls always sort to the bottom regardless of direction
+      if(av==null && bv==null) return 0;
+      if(av==null) return 1;
+      if(bv==null) return -1;
+      if(av<bv) return -1*dir; if(av>bv) return 1*dir; return 0;
+    });
     document.getElementById('ocTbody').innerHTML = list.map(b=>`<tr${b.dataStale?' style="background:var(--warning-bg, rgba(180,120,0,0.06));"':''}>
       <td>${escHtml(b.name)}${b.notYetOpenedStore?' <span title="ร้านยังไม่เปิด — นับสมาชิกกลุ่มโอเพนแชทที่ตั้งไว้ล่วงหน้า" style="cursor:help;color:var(--muted-fg);font-size:11px;">🚧 ยังไม่เปิดร้าน</span>':''}${b.dataStale?' <span title="ยอดสมาชิกยังไม่อัปเดท" style="cursor:help;">⚠️</span>':''}</td><td>${escHtml(b.province)}</td>
       <td>${escHtml(b.warehouse||'-')}</td><td>${b.grandOpening||'-'}</td>
@@ -680,7 +701,13 @@ function renderOpenChatManagement(body){
   document.getElementById('ocProvince').addEventListener('change', e=>{ commhubFilters.province=e.target.value; apply(); });
   document.getElementById('ocHealth').addEventListener('change', e=>{ commhubFilters.health=e.target.value; apply(); });
   document.getElementById('ocFocus').addEventListener('change', e=>{ commhubFilters.focus=e.target.value; apply(); });
-  document.getElementById('ocClear').addEventListener('click', ()=>{ commhubFilters.q=''; commhubFilters.province='all'; commhubFilters.health='all'; commhubFilters.focus='all'; renderOpenChatManagement(body); });
+  document.getElementById('ocClear').addEventListener('click', ()=>{ commhubFilters.q=''; commhubFilters.province='all'; commhubFilters.health='all'; commhubFilters.focus='all'; commhubFilters.sortKey='grandOpening'; commhubFilters.sortDir='desc'; renderOpenChatManagement(body); });
+  qsa('.oc-sort-th', body).forEach(th => th.addEventListener('click', () => {
+    const key = th.dataset.sortKey;
+    if(commhubFilters.sortKey === key) commhubFilters.sortDir = commhubFilters.sortDir==='asc' ? 'desc' : 'asc';
+    else { commhubFilters.sortKey = key; commhubFilters.sortDir = 'desc'; }
+    renderOpenChatManagement(body);
+  }));
   document.getElementById('ocHealth').value = commhubFilters.health;
   document.getElementById('ocFocus').value = commhubFilters.focus;
 }
