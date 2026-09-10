@@ -189,6 +189,7 @@ a.gmap{color:var(--accent); text-decoration:none; font-size:11px;}
       <select id="newFilter">
         <option value="all">ทั้งหมด (ใหม่/เก่า)</option>
         <option value="new">เฉพาะสาขาใหม่ (เปิดเดือนนี้)</option>
+        <option value="new90">เฉพาะสาขาใหม่ (เปิด ≤ 90 วัน)</option>
         <option value="old">เฉพาะสาขาเก่า</option>
       </select>
       <select id="focusFilter"><option value="all">ทุกสาขา (โฟกัส/ไม่โฟกัส)</option><option value="__any__">เฉพาะสาขาโฟกัส (ทุกรอบ)</option><option value="__none__">เฉพาะสาขาที่ยังไม่ถูกโฟกัส</option></select>
@@ -15792,12 +15793,14 @@ function renderKpis(){
   const tracked = opened.filter(b=>b.latest_count!=null);
   const totalMembers = tracked.reduce((s,b)=>s+b.latest_count,0);
   const newStores = opened.filter(b=>b.is_new);
+  const newStores90 = opened.filter(b=>{ const ds = daysSince(b.grand_opening); return ds!==null && ds>=0 && ds<=90; });
   const provinces = new Set(branches.filter(b=>b.province).map(b=>b.province));
   const items = [
     ['สาขาทั้งหมดในไปป์ไลน์', total, ''],
     ['เปิดแล้ว', opened.length, `${((opened.length/total)*100).toFixed(0)}% ของทั้งหมด`],
     ['กำลังจะเปิด', upcoming.length, 'ก่อสร้างแล้ว/กำลัง setup'],
     ['สาขาใหม่ (เปิดเดือนนี้)', newStores.length, ''],
+    ['สาขาใหม่ (เปิด ≤ 90 วัน)', newStores90.length, ''],
     ['สมาชิก OpenChat รวม', totalMembers.toLocaleString(), `${tracked.length}/${opened.length} สาขาที่เปิดแล้วมีข้อมูล`],
     ['จังหวัดที่ครอบคลุม', provinces.size, ''],
     ['วางแผน/ยังไม่เริ่ม', planned.length, ''],
@@ -15930,6 +15933,7 @@ function currentRows(){
     if(prov!=='all' && b.province!==prov) return false;
     if(zone!=='all' && (b.warehouse||'ไม่ระบุ')!==zone) return false;
     if(newF==='new' && !b.is_new) return false;
+    if(newF==='new90'){ const ds = daysSince(b.grand_opening); if(!(ds!==null && ds>=0 && ds<=90)) return false; }
     if(newF==='old' && b.is_new) return false;
     if(focusF==='__any__' && !b.focus_round) return false;
     if(focusF==='__none__' && b.focus_round) return false;
