@@ -981,7 +981,7 @@ function renderBranchCenter(){
       <button class="btn btn-outline btn-sm clear-btn" id="bcClear">ล้างตัวกรอง</button>
     </div>
     <div class="table-scroll" style="max-height:560px;overflow-y:auto;">
-      <table><thead><tr><th>รหัส</th><th>สาขา</th><th>จังหวัด</th><th>สมาชิก</th><th>โต%</th><th>สุขภาพ</th><th>OA</th><th>อินไซต์สินค้า</th><th></th></tr></thead><tbody id="bcTbody"></tbody></table>
+      <table><thead><tr><th>รหัส</th><th>สาขา</th><th>จังหวัด</th><th>สมาชิก</th><th>โต%</th><th>สุขภาพ</th><th>OA</th><th>อินไซต์สินค้า</th><th>แผนที่</th><th></th></tr></thead><tbody id="bcTbody"></tbody></table>
     </div>
   `;
   function apply(){
@@ -995,8 +995,9 @@ function renderBranchCenter(){
       <td>${healthDot(b.health)}${healthLabel(b.health)}</td>
       <td>${badge(b.oa.status,b.oa.status.indexOf('นำร่อง')===0?'warning':'muted')}</td>
       <td style="max-width:160px;white-space:normal;">${b.productInsight ? escHtml(b.productInsight) : '<span style="color:var(--muted-fg);">ยังไม่มีข้อมูล</span>'}</td>
+      <td>${b.gmaps ? `<a href="${escHtml(b.gmaps)}" target="_blank" rel="noopener noreferrer" style="color:var(--info);">📍 แผนที่</a>` : '<span style="color:var(--muted-fg);">—</span>'}</td>
       <td><button class="btn btn-outline btn-sm" onclick="openBranchDetail('${b.code}')">ดูรายละเอียด</button></td>
-    </tr>`).join('') || '<tr><td colspan="9"><div class="empty-state"><div class="d">ไม่พบสาขา</div></div></td></tr>';
+    </tr>`).join('') || '<tr><td colspan="10"><div class="empty-state"><div class="d">ไม่พบสาขา</div></div></td></tr>';
   }
   apply();
   document.getElementById('bcSearch').addEventListener('input', e=>{ branchFilters.q=e.target.value; apply(); });
@@ -1017,7 +1018,7 @@ function openBranchDetail(code){
         <div class="card stat-card"><div class="stat-label">โต% จาก baseline</div><div class="stat-value ${b.growth>=0?'success':'destructive'}">${fmtPct(b.growth)}</div></div>
         <div class="card stat-card"><div class="stat-label">สุขภาพ</div><div class="stat-value">${healthDot(b.health)}${healthLabel(b.health)}</div></div>
       </div>
-      <p style="font-size:12.5px;"><b>จังหวัด/อำเภอ:</b> ${escHtml(b.province)} / ${escHtml(b.district)} &nbsp; <b>เปิดสาขา:</b> ${b.grandOpening}</p>
+      <p style="font-size:12.5px;"><b>จังหวัด/อำเภอ:</b> ${escHtml(b.province)} / ${escHtml(b.district)} &nbsp; <b>เปิดสาขา:</b> ${b.grandOpening} &nbsp; ${b.gmaps ? `<a href="${escHtml(b.gmaps)}" target="_blank" rel="noopener noreferrer" style="color:var(--info);">📍 แผนที่</a>` : ''}</p>
       <p style="font-size:12.5px;"><b>ผู้ดูแลชุมชน / เจ้าของแคมเปญ:</b> ${escHtml(b.owner)} &nbsp; <b>กิจกรรมล่าสุด:</b> ${b.lastActivity||'—'}</p>
       <p style="font-size:12.5px;"><b>สถานะ LINE OA:</b> ${badge(b.oa.status,'muted')} ${integBadge('api')}</p>
 
@@ -1130,36 +1131,10 @@ const CAPTION_TEMPLATES = {
 function renderAIInsight(){
   const root = document.getElementById('view-aiinsight');
   const branches = STORE.BRANCHES.filter(b=>!b.notYetOpenedStore);
-  const withGrowth = branches.filter(b=>b.growth!==null);
-  const atRisk = withGrowth.filter(b=>b.growth<0).sort((a,b)=>a.growth-b.growth).slice(0,5);
-  const shining = withGrowth.filter(b=>b.growth>=50).sort((a,b)=>b.growth-a.growth).slice(0,5);
-  const noData = branches.filter(b=>b.growth===null).length;
-  const upcoming = STORE.CAMPAIGNS.filter(c=>c.scheduleDate>=TODAY).sort((a,b)=>a.scheduleDate.localeCompare(b.scheduleDate)).slice(0,3);
-  const fb = STORE.FEEDBACK||[];
-  const negFb = fb.filter(f=>f.sentiment==='negative').length;
 
   root.innerHTML = `
-    <div class="page-header"><div><h1>AI Insight — Community Marketing Co-Pilot</h1><p>สรุปสถานการณ์และคำแนะนำจากข้อมูลจริงในระบบทุกวัน</p></div></div>
+    <div class="page-header"><div><h1>AI Insight — Community Marketing Co-Pilot</h1><p>ตัวช่วยสร้างแคปชั่น/โพสต์รายสาขา — สรุปสถานการณ์สาขาแบบ Top 5 ดูได้ที่ Dashboard, สรุป Feedback ดูได้ที่ CRM, กำหนดการแคมเปญดูได้ที่ Campaign Center → Communication Timeline (ตัดออกจากหน้านี้แล้วเพื่อไม่ให้ซ้ำ)</p></div></div>
     <div class="card" style="margin-bottom:14px;padding:10px 14px;">${integBadge('live')} <span style="font-size:12px;color:var(--muted-fg);">ตอนนี้เป็นการประมวลผลตามกฎ (Rule-based) จากข้อมูลจริง ยังไม่ใช่ Generative AI เต็มรูปแบบ — เชื่อม LLM API ในเฟสถัดไปเพื่อวิเคราะห์เชิงลึกกว่านี้ได้ ${integBadge('future')}</span></div>
-
-    <div class="grid g2" style="margin-bottom:14px;">
-      <div class="ai-msg"><div class="h">🚨 สาขาที่น่าเป็นห่วง (${atRisk.length})</div>
-        ${atRisk.map(b=>'• '+escHtml(b.name)+' ('+escHtml(b.province)+') สมาชิกลดลง '+fmtPct(b.growth)+'<br>').join('') || 'ไม่มีสาขาที่น่าเป็นห่วงตอนนี้'}
-      </div>
-      <div class="ai-msg"><div class="h">🌟 สาขาที่ควรชื่นชม (${shining.length})</div>
-        ${shining.map(b=>'• '+escHtml(b.name)+' ('+escHtml(b.province)+') โตถึง '+fmtPct(b.growth)+'<br>').join('') || 'ยังไม่มีสาขาที่โต ≥50%'}
-      </div>
-    </div>
-
-    <div class="grid g2" style="margin-bottom:14px;">
-      <div class="ai-msg"><div class="h">📅 แคมเปญที่กำลังจะถึง</div>
-        ${upcoming.map(c=>'• '+c.scheduleDate+' — '+escHtml(c.name)+'<br>').join('') || 'ยังไม่มีแคมเปญกำหนดการล่วงหน้า ลองสร้างแคมเปญใหม่ที่ Campaign Center'}
-      </div>
-      <div class="ai-msg"><div class="h">💬 สรุป Feedback ลูกค้า</div>
-        Feedback ทั้งหมด ${fb.length} รายการ · เชิงลบ ${negFb} รายการ${negFb>0?' — ควรตรวจสอบสาขาที่เกี่ยวข้องโดยเร็ว':''}<br>
-        ${noData>0?('มี '+noData+' สาขาที่ยังไม่มีข้อมูล baseline เทียบโต — แนะนำเริ่มเก็บ baseline รอบใหม่'):''}
-      </div>
-    </div>
 
     <div class="card">
       <div class="card-header"><p class="card-title">✍️ ตัวช่วยสร้างแคปชั่น / โพสต์</p></div>
